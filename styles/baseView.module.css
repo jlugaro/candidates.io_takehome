@@ -1,0 +1,142 @@
+.formFields {
+    font-size: 0.95rem;
+    color: var(--grey-text-color) !important;
+}
+.label {
+  color: var(--grey-text-color);
+}
+.inputBackground {
+    background-color: #202225 !important;
+    border-color: #202225 !important;
+    border-radius: 0.5rem !important;
+    color: #dcddde !important;
+}
+.draggerStyle {
+    background-color: #40444B !important;
+    border-color: #40444B !important;
+    border-radius: 0.5rem !important;
+    color: #dcddde !important;
+}
+.settingsView {
+    flex: 6;
+    height: 100%;
+    width: 100% !important;
+    position: relative;
+    overflow-y: scroll;
+  }
+.settingsContainer {
+    padding: 20px;
+    overflow-y: scroll;
+    height: 100%;
+    max-width: 500px; 
+}
+.subSectionTitle {
+  margin-bottom: 24px;
+}
+
+/* Overrides Antd Uploader styling */
+.ant-upload.ant-upload-drag {
+  height: 235px;
+}
+
+.ant-upload.ant-upload-drag .ant-upload-btn {
+  min-height: 250px;
+}
+
+.ant-upload-drag-container {
+  display: table;
+  vertical-align: middle;
+  border: 2px dashed #2d2d2d;
+  padding: 20px;
+  margin: 0 auto;
+  border-radius: 6px;
+}
+
+.ant-upload-list {
+  display: none;
+}
+
+.card {
+    padding: 0;
+    margin-top: 8px;
+    text-align: left;
+    color: #C1C1C1;
+    text-decoration: none;
+    background: #40444B;
+    border-radius: 10px;
+    transition: color 0.15s ease, border-color 0.15s ease;
+    box-shadow: rgb(27 32 37 / 12%) 2px 2px 4px 0;
+  }
+  
+  .cardItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #2D2E33;
+    padding: 7px 12px;
+  }
+  
+  .cardItem:first-child {
+    border-top: none;
+  }
+  
+  .cardItem:last-child {
+    border-bottom: none;
+  }
+  
+  .cardItem:hover .btn{
+    visibility: visible;
+  }
+
+  .labelContainer {
+    margin-bottom: 1rem;
+  }
+
+  .labelTitle {
+    margin-bottom: .5rem;
+  }
+
+  .label {
+    background: #40444B;
+    color: #DCDDDE;
+    box-shadow: rgb(27 32 37 / 12%) 2px 2px 4px 0;
+    border-color: #d9d9d9;
+    width: 100%;
+    padding: 7px 12px;
+    border-radius: 0.5rem;
+    line-height: 1.5715;
+    margin-top: 8px;
+  }
+
+  .mintBtn {
+    margin-top: 1rem;
+    margin-bottom: 4rem;
+    width: 100%;
+    background: #272c32;
+    border-radius: 4px;
+    border: none;
+    color: #b1b1b1;
+    padding: 5px 12px;
+    box-shadow: rgb(38 57 77 / 77%) 0px 2px 40px -30px;
+  }
+
+  .mintBtn:hover {
+    cursor: pointer;
+    background: #40444B;
+  }
+  
+  .btn {
+    visibility: hidden;
+    background: #272c32;
+    border-radius: 20px;
+    border: none;
+    color: #b1b1b1;
+    padding: 5px 12px;
+    box-shadow: rgb(38 57 77 / 77%) 0px 2px 40px -30px;
+  }
+  
+  .btn:hover {
+    background: #202429;
+    transition: 0.3s;
+    cursor: pointer;
+  }
