@@ -1,6 +1,9 @@
-import styles from "./../styles/layout.module.css";
 import { useEffect, useState } from "react";
+
 import CandidatesListView from "../components/Candidates/CandidatesListView";
+import OpeningsListView from "../components/Openings/OpeningsListView";
+import SkillsListView from "../components/Skills/SkillsListView";
+import styles from "./../styles/layout.module.css";
 import { useRouter } from "next/router";
 
 const Layout = () => {
@@ -8,13 +11,21 @@ const Layout = () => {
   const router = useRouter();
   const screenMap = {
     candidates: <CandidatesListView />,
-    skills: <h1>Skills component goes here</h1>,
-    openings: <h1>Openings component goes here</h1>,
+    skills: <SkillsListView/>,
+    openings: <OpeningsListView/>,
+    // skills: <h1>Skills component goes here</h1>,
+    // openings: <h1>Openings component goes here</h1>,
   };
 
-  useEffect(async () => {
-    setCurrentTab(router.query?.tab);
+  useEffect(() => {
+    async function fetchData() {
+      setCurrentTab(router.query?.tab);
+    }
   }, [router]);
+
+  // useEffect(async () => {
+  //   setCurrentTab(router.query?.tab);
+  // }, [router]);
 
   const setTab = (name) => {
     router.push(`?tab=${name}`);

@@ -1,27 +1,27 @@
 import { useContext, useEffect, useState } from "react"
 
 import { AppContext } from "../../context/context"
-import ManageCandidateModal from './ManageCandidateModal'
+import ManageOpeningModal from './ManageOpeningModal'
 import PageHeader from "../PageHeader"
 import styles from "../../styles/baseView.module.css"
 
-const CandidatesListView = () => {
-  const { fetchCandidates } = useContext(AppContext);
-  const [candidates, setCandidates] = useState([]);
-  const [selectedCandidate, setSelectedCandidate] = useState(null);
+const OpeningsListView = () => {
+  const { fetchOpenings } = useContext(AppContext);
+  const [openings, setOpenings] = useState([]);
+  const [selectedOpening, setSelectedOpening] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
-  useEffect(() => {
-    init()
-  },[]);
+  useEffect(async () => {
+    init();
+  }, []);
 
   async function init() {
-    await fetchCandidates().then((res) => {
-      setCandidates(res);
+    await fetchOpenings().then((res) => {
+      setOpenings(res);
     });
   }
 
-  const handleEditEvent = (candidate) => {
+  const handleEditEvent = (opening) => {
     alert('not implemented');
   };
 
@@ -32,20 +32,26 @@ const CandidatesListView = () => {
   return (
     <>
       <div className="view" style={{overflowY: "scroll"}}>
-        <PageHeader settingsTab="Candidates" />
+        <PageHeader settingsTab="Openings" />
         <div className="section">
-          <h3 className="title">Manage Candidates</h3>
+          <h3 className="title">Manage Openings</h3>
 
-          {candidates?.length > 0 && (
+          {openings?.length > 0 && (
             <>
               <div className={styles.card}>
-                {candidates?.map((candidate, index) => (
+                {openings?.map((opening, index) => (
                   <div className={styles.cardItem} key={index}>
-                    {candidate.name} <br />
-                    {candidate.phone} <br />
-                    {candidate.email} 
+                    {opening.client} <br />
+                    {opening.email} <br />
+                    {"available positions: " + opening.neededCandidates} <br/>
+                    {opening.skills?.length > 0 && ( <>
+                  needed skills: {opening.skills?.map((skill, index) => (
+                      <>{skill.name + " "}</>
+                  ))}
+                  </>
+              )}
                     <button
-                      onClick={() => handleEditEvent(candidate)}
+                      onClick={() => handleEditEvent(opening)}
                       className={styles.btn}
                     >
                       edit
@@ -61,16 +67,16 @@ const CandidatesListView = () => {
             style={{ marginTop: "2rem" }}
             onClick={() => displayModal()}
           >
-            Add Candidate
+            Add Opening
           </button>
         </div>
       </div>
       {modalVisible &&
-        <ManageCandidateModal
-          candidates={candidates}
+        <ManageOpeningModal
+          openings={openings}
           setModalVisible={setModalVisible}
           modalVisible={modalVisible}
-          selectedCandidate={selectedCandidate}
+          selectedOpening={selectedOpening}
           refreshEvent={init}
         />
       }
@@ -78,4 +84,4 @@ const CandidatesListView = () => {
   );
 };
 
-export default CandidatesListView;
+export default OpeningsListView;
