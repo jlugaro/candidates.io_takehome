@@ -1,4 +1,5 @@
-import { createContext, useState, useEffect, useReducer } from 'react'
+import { createContext, useEffect, useReducer, useState } from 'react'
+
 import { useRouter } from 'next/router'
 
 export const AppContext = createContext()
@@ -19,9 +20,13 @@ export const ContextProvider = ({ children }) => {
   const router = useRouter()
   const [state, dispatch] = useReducer(reducer, initialState)
 
-  useEffect(async () => {
+  useEffect(() => {
     dispatch({ type: 'clear', data: {} })
   }, [router.query])
+
+  // useEffect(async () => {
+  //   dispatch({ type: 'clear', data: {} })
+  // }, [router.query])
 
   const fetchCandidates = async () => {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getCandidates`);
@@ -111,6 +116,7 @@ export const ContextProvider = ({ children }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          //"Accept": "application/json"
         },
         body: JSON.stringify(data),
       });

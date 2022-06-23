@@ -4,30 +4,54 @@ import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../context/context";
 import styles from "../../styles/baseView.module.css";
 
-const ManageCandidateModal = ({ candidates, modalVisible, setModalVisible, selectedCandidate, refreshEvent }) => {
+const ManageSkillModal = ({ skills, modalVisible, setModalVisible, selectedSkill, refreshEvent }) => {
 
   const [isLoading, setIsLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [buttonMessage, setButtonMessage] = useState("submit");
   const [isFailure, setIsFailure] = useState(false)
-  const [candidate, setCandidate] = useState(false)
+  const [skill, setSkill] = useState(false)
   const [selectedSkills, setSelectedSkills] = useState(false);
-  const [skills, setSkills] = useState([]);
+  //const [skills, setSkills] = useState([]);
   const [form] = Form.useForm();
-  const { createCandidate, fetchSkills } = useContext(AppContext);
+  const { createSkill, fetchSkills} = useContext(AppContext);
 
   const requiredFieldMessage = "This information is required";
 
   useEffect(async () => {
-    if (selectedCandidate) {
-     form.setFieldsValue(selectedCandidate);
-     setSelectedSkills(selectedCandidate.skills)
+    if (selectedSkill) {
+     form.setFieldsValue(selectedSkill);
+     setSelectedSkills(selectedSkill)
    }
 
    await fetchSkills().then(res => {
      setSkills(res)
    })
   }, []);
+
+  // useEffect(() => {
+  //   async () => {
+  //     if (selectedSkill) {
+  //       form.setFieldsValue(selectedSkill);
+  //       setSelectedSkills(selectedSkill.skills)
+  //     }
+   
+  //     await fetchSkills().then(res => {
+  //       setSelectedSkills(res)
+  //     })
+  //   }
+  // }, []);
+
+  // useEffect(async () => {
+  //   if (selectedSkill) {
+  //    form.setFieldsValue(selectedSkill);
+  //    setSelectedSkills(selectedSkill.skills)
+  //  }
+
+  //  await fetchSkills().then(res => {
+  //    setSkills(res)
+  //  })
+  // }, []);
 
   const hideModal = (e) => {
     setModalVisible(false);
@@ -42,7 +66,7 @@ const ManageCandidateModal = ({ candidates, modalVisible, setModalVisible, selec
     setButtonMessage("create");
   }
 
-  const candidateSubmit = async () =>  {
+  const skillSubmit = async () =>  {
     if(formValidate())
       await submitForm();
   }
@@ -52,21 +76,20 @@ const ManageCandidateModal = ({ candidates, modalVisible, setModalVisible, selec
 
     let values = form.getFieldsValue();
 
-    if(!values.name | !values.email
-      | !values.phone | !values.skills)
+    if(!values.name)
       return false;
 
     return true;
   }
 
-  const candidateCreateSucess = () => {
+  const skillCreateSucess = () => {
     setIsLoading(false);
     setIsSuccess(true);
     setButtonMessage("Success!")
-    candidates.push(candidate)
+    skills.push(skill)
   }
 
-  const candidateCreateFailure = () => {
+  const skillCreateFailure = () => {
     setIsLoading(false);
     setIsFailure(true);
     throw 'There was an error creating the record';
@@ -78,20 +101,18 @@ const ManageCandidateModal = ({ candidates, modalVisible, setModalVisible, selec
 
     let values = form.getFieldsValue();
 
-    if (selectedCandidate) {
-      await updateCandidate(
-        selectedCandidate?._id,
+    if (selectedSkill) {
+      await updateSkill(
+        selectedSkill?._id,
         values.name,
-        values.email,
-        values.phone,
-        values.skills
       );
     } else {
-        await createCandidate(values.name, values.email, values.phone, values.skills, candidateCreateSucess, candidateCreateFailure);
+      await createSkill(values.name, skillCreateSucess, skillCreateFailure);
     }
+    
   };
 
-  const candidateFormInputs = (changedValues, allValues) => {
+  const skillFormInputs = (changedValues, allValues) => {
     form.setFieldsValue(allValues);
   };
 
@@ -101,17 +122,17 @@ const ManageCandidateModal = ({ candidates, modalVisible, setModalVisible, selec
 
   return (
       <Modal
-        title="Manage Candidate"
+        title="Manage Skill"
         visible={modalVisible}
         destroyOnClose={true}
         onCancel={hideModal}
-        onOk={candidateSubmit}
+        onOk={skillSubmit}
         footer={[
           <Button
             key="1"
             type="primary"
             loading={isLoading}
-            onClick={candidateSubmit}
+            onClick={skillSubmit}
             disabled={isSuccess}
           >
             {buttonMessage}
@@ -121,7 +142,7 @@ const ManageCandidateModal = ({ candidates, modalVisible, setModalVisible, selec
         <>
           {isFailure && (
             <Alert
-              message="There was an error createing your candidate"
+              message="There was an error creating your skill"
               type="error"
             />
           )}
@@ -131,7 +152,7 @@ const ManageCandidateModal = ({ candidates, modalVisible, setModalVisible, selec
           className={styles.formFields}
           form={form}
    
-          onValuesChange={candidateFormInputs}
+          onValuesChange={skillFormInputs}
         >
           <Form.Item
             label="Name"
@@ -141,40 +162,6 @@ const ManageCandidateModal = ({ candidates, modalVisible, setModalVisible, selec
           >
             <Input className={styles.inputBackground} />
           </Form.Item>
-
-          <Form.Item 
-            label="Phone number" 
-            name="phone" 
-            required
-            rules={[{ required: true, message: requiredFieldMessage }]}>
-            <Input className={styles.inputBackground} />
-          </Form.Item>
-
-          <Form.Item
-            label="Email Address"
-            name="email"
-            required
-            rules={[
-              { required: true, message: requiredFieldMessage,
-                type: "email", message: "The input is not valid E-mail!" },
-            ]}
-          >
-            <Input className={styles.inputBackground} />
-          </Form.Item>
-
-          <Form.Item label="Skills" name="skills">
-            <Checkbox.Group style={{ width: "100%" }} onChange={onChange}>
-              {skills?.length > 0 && (
-                <Row>
-                  {skills?.map((skill, index) => (
-                    <Col span={8} key={index}>
-                      <Checkbox value={skill.name}>{skill.name}</Checkbox>
-                    </Col>
-                  ))}
-                </Row>
-              )}
-            </Checkbox.Group>
-          </Form.Item>
         </Form>
           
         </>
@@ -182,4 +169,4 @@ const ManageCandidateModal = ({ candidates, modalVisible, setModalVisible, selec
   );
 };
 
-export default ManageCandidateModal;
+export default ManageSkillModal;

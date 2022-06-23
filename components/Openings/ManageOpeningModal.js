@@ -4,24 +4,24 @@ import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../context/context";
 import styles from "../../styles/baseView.module.css";
 
-const ManageCandidateModal = ({ candidates, modalVisible, setModalVisible, selectedCandidate, refreshEvent }) => {
+const ManageOpeningModal = ({ openings, modalVisible, setModalVisible, selectedOpening, refreshEvent }) => {
 
   const [isLoading, setIsLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const [buttonMessage, setButtonMessage] = useState("submit");
   const [isFailure, setIsFailure] = useState(false)
-  const [candidate, setCandidate] = useState(false)
+  const [opening, setOpening] = useState(false)
   const [selectedSkills, setSelectedSkills] = useState(false);
   const [skills, setSkills] = useState([]);
   const [form] = Form.useForm();
-  const { createCandidate, fetchSkills } = useContext(AppContext);
+  const { createOpening, fetchSkills } = useContext(AppContext);
 
   const requiredFieldMessage = "This information is required";
 
   useEffect(async () => {
-    if (selectedCandidate) {
-     form.setFieldsValue(selectedCandidate);
-     setSelectedSkills(selectedCandidate.skills)
+    if (selectedOpening) {
+     form.setFieldsValue(selectedOpening);
+     setSelectedSkills(selectedOpening.skills)
    }
 
    await fetchSkills().then(res => {
@@ -42,7 +42,7 @@ const ManageCandidateModal = ({ candidates, modalVisible, setModalVisible, selec
     setButtonMessage("create");
   }
 
-  const candidateSubmit = async () =>  {
+  const openingSubmit = async () =>  {
     if(formValidate())
       await submitForm();
   }
@@ -52,21 +52,21 @@ const ManageCandidateModal = ({ candidates, modalVisible, setModalVisible, selec
 
     let values = form.getFieldsValue();
 
-    if(!values.name | !values.email
-      | !values.phone | !values.skills)
+    if(!values.client | !values.email
+      | !values.neededCandidates | !values.skills)
       return false;
 
     return true;
   }
 
-  const candidateCreateSucess = () => {
+  const openingCreateSucess = () => {
     setIsLoading(false);
     setIsSuccess(true);
     setButtonMessage("Success!")
-    candidates.push(candidate)
+    openings.push(opening)
   }
 
-  const candidateCreateFailure = () => {
+  const openingCreateFailure = () => {
     setIsLoading(false);
     setIsFailure(true);
     throw 'There was an error creating the record';
@@ -78,20 +78,36 @@ const ManageCandidateModal = ({ candidates, modalVisible, setModalVisible, selec
 
     let values = form.getFieldsValue();
 
-    if (selectedCandidate) {
-      await updateCandidate(
-        selectedCandidate?._id,
-        values.name,
+    console.log("values.client: ");
+    console.log(values.client)
+    console.log("values.email: ");
+    console.log(values.email)
+    console.log("values.neededCandidates: ");
+    console.log(values.neededCandidates)
+    console.log("values.skills: ");
+    console.log(values.skills)
+    // console.log("values.openingCreateSucess: ");
+    // console.log(openingCreateSucess)
+    // console.log("values.openingCreateFailure: ");
+    // console.log(openingCreateFailure)
+    // {values.skills.map((item) => {
+    //   console.log(item);
+    // })}
+    if (selectedOpening) {
+      await updateOpening(
+        selectedOpening?._id,
+        values.client,
         values.email,
-        values.phone,
+        values.neededCandidates,
         values.skills
       );
     } else {
-        await createCandidate(values.name, values.email, values.phone, values.skills, candidateCreateSucess, candidateCreateFailure);
+      //const resultCreateOpening = await createOpening(values.client, values.email, values.neededCandidates, values.skills, openingCreateSucess, openingCreateFailure);
+      //console.log(resultCreateOpening);
     }
   };
 
-  const candidateFormInputs = (changedValues, allValues) => {
+  const openingFormInputs = (changedValues, allValues) => {
     form.setFieldsValue(allValues);
   };
 
@@ -101,17 +117,17 @@ const ManageCandidateModal = ({ candidates, modalVisible, setModalVisible, selec
 
   return (
       <Modal
-        title="Manage Candidate"
+        title="Manage Opening"
         visible={modalVisible}
         destroyOnClose={true}
         onCancel={hideModal}
-        onOk={candidateSubmit}
+        onOk={openingSubmit}
         footer={[
           <Button
             key="1"
             type="primary"
             loading={isLoading}
-            onClick={candidateSubmit}
+            onClick={openingSubmit}
             disabled={isSuccess}
           >
             {buttonMessage}
@@ -121,7 +137,7 @@ const ManageCandidateModal = ({ candidates, modalVisible, setModalVisible, selec
         <>
           {isFailure && (
             <Alert
-              message="There was an error createing your candidate"
+              message="There was an error createing your opening"
               type="error"
             />
           )}
@@ -131,22 +147,14 @@ const ManageCandidateModal = ({ candidates, modalVisible, setModalVisible, selec
           className={styles.formFields}
           form={form}
    
-          onValuesChange={candidateFormInputs}
+          onValuesChange={openingFormInputs}
         >
           <Form.Item
-            label="Name"
-            name="name"
+            label="Client"
+            name="client"
             required
             rules={[{ required: true, message: requiredFieldMessage }]}
           >
-            <Input className={styles.inputBackground} />
-          </Form.Item>
-
-          <Form.Item 
-            label="Phone number" 
-            name="phone" 
-            required
-            rules={[{ required: true, message: requiredFieldMessage }]}>
             <Input className={styles.inputBackground} />
           </Form.Item>
 
@@ -159,6 +167,14 @@ const ManageCandidateModal = ({ candidates, modalVisible, setModalVisible, selec
                 type: "email", message: "The input is not valid E-mail!" },
             ]}
           >
+            <Input className={styles.inputBackground} />
+          </Form.Item>
+
+          <Form.Item 
+            label="Needed Candidates" 
+            name="neededCandidates" 
+            required
+            rules={[{ required: true, message: requiredFieldMessage }]}>
             <Input className={styles.inputBackground} />
           </Form.Item>
 
@@ -182,4 +198,4 @@ const ManageCandidateModal = ({ candidates, modalVisible, setModalVisible, selec
   );
 };
 
-export default ManageCandidateModal;
+export default ManageOpeningModal;

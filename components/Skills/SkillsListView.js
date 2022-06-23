@@ -1,27 +1,27 @@
 import { useContext, useEffect, useState } from "react"
 
 import { AppContext } from "../../context/context"
-import ManageCandidateModal from './ManageCandidateModal'
+import ManageSkillModal from './ManageSkillModal'
 import PageHeader from "../PageHeader"
 import styles from "../../styles/baseView.module.css"
 
-const CandidatesListView = () => {
-  const { fetchCandidates } = useContext(AppContext);
-  const [candidates, setCandidates] = useState([]);
-  const [selectedCandidate, setSelectedCandidate] = useState(null);
+const SkillsListView = () => {
+  const { fetchSkills } = useContext(AppContext);
+  const [skills, setSkills] = useState([]);
+  const [selectedSkill, setSelectedSkill] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
-    init()
-  },[]);
+    init();
+  }, []);
 
   async function init() {
-    await fetchCandidates().then((res) => {
-      setCandidates(res);
+    await fetchSkills().then((res) => {
+      setSkills(res);
     });
   }
 
-  const handleEditEvent = (candidate) => {
+  const handleEditEvent = (skill) => {
     alert('not implemented');
   };
 
@@ -32,20 +32,20 @@ const CandidatesListView = () => {
   return (
     <>
       <div className="view" style={{overflowY: "scroll"}}>
-        <PageHeader settingsTab="Candidates" />
+        <PageHeader settingsTab="Skills" />
         <div className="section">
-          <h3 className="title">Manage Candidates</h3>
+          <h3 className="title">Manage Skills</h3>
 
-          {candidates?.length > 0 && (
+          {skills?.length > 0 && (
             <>
               <div className={styles.card}>
-                {candidates?.map((candidate, index) => (
+                {skills?.map((skill, index) => (
                   <div className={styles.cardItem} key={index}>
-                    {candidate.name} <br />
-                    {candidate.phone} <br />
-                    {candidate.email} 
+                    {skill.name} <br />
+                    {skill.phone} <br />
+                    {skill.email}
                     <button
-                      onClick={() => handleEditEvent(candidate)}
+                      onClick={() => handleEditEvent(skill)}
                       className={styles.btn}
                     >
                       edit
@@ -61,16 +61,16 @@ const CandidatesListView = () => {
             style={{ marginTop: "2rem" }}
             onClick={() => displayModal()}
           >
-            Add Candidate
+            Add Skill
           </button>
         </div>
       </div>
       {modalVisible &&
-        <ManageCandidateModal
-          candidates={candidates}
+        <ManageSkillModal
+          skills={skills}
           setModalVisible={setModalVisible}
           modalVisible={modalVisible}
-          selectedCandidate={selectedCandidate}
+          selectedSkill={selectedSkill}
           refreshEvent={init}
         />
       }
@@ -78,4 +78,4 @@ const CandidatesListView = () => {
   );
 };
 
-export default CandidatesListView;
+export default SkillsListView;
